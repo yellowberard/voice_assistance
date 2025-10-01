@@ -1,4 +1,4 @@
-# 🎤 Enhanced Voice Interview Bot
+# 🎤  Voice Interview Bot
 
 A sophisticated voice-enabled interview bot that combines personal information with knowledge graph context to provide intelligent, contextual responses. Built with Python, Flask, DSPy, and Neo4j for enhanced AI capabilities.
 

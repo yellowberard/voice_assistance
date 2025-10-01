@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Interview Assistant | Mayank Goel</title>
+    
+    <!-- Google Fonts - Humanist Sans-Serif -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Professional Design System - Warm Color Hunt Palette */
+        :root {
+            /* Color Palette from ColorHunt - Warm & Inviting */
+            --color-coral: #F08787;          /* Warm coral/salmon */
+            --color-peach: #FFC7A7;         /* Soft peach */
+            --color-cream: #FEE2AD;         /* Light cream */
+            --color-mint: #F8FAB4;          /* Soft mint green */
+            
+            /* Semantic Color Mapping */
+            --color-primary: #F08787;        /* Coral for primary actions */
+            --color-secondary: #FFC7A7;     /* Peach for secondary elements */
+            --color-background: #FEE2AD;    /* Cream for backgrounds */
+            --color-accent: #F8FAB4;        /* Mint for accents */
+            --color-white: #FFFFFF;         /* Pure white */
+            --color-dark: #2D3748;          /* Dark gray for text */
+            --color-cancel: #EF4444;        /* Red for cancel button */
+            
+            /* Typography System */
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-secondary: 'Source Sans Pro', system-ui, sans-serif;
+            
+            /* Spacing System (8px base) */
+            --space-xs: 0.5rem;    /* 8px */
+            --space-sm: 1rem;      /* 16px */
+            --space-md: 1.5rem;    /* 24px */
+            --space-lg: 2rem;      /* 32px */
+            --space-xl: 3rem;      /* 48px */
+            --space-2xl: 4rem;     /* 64px */
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(45, 55, 72, 0.1);
+            --shadow-md: 0 4px 12px rgba(45, 55, 72, 0.15);
+            --shadow-lg: 0 8px 32px rgba(45, 55, 72, 0.2);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, var(--color-background) 0%, var(--color-accent) 100%);
+            min-height: 100vh;
+            color: var(--color-dark);
+            line-height: 1.6;
+            font-size: 16px;
+            padding: var(--space-md);
+        }
+
+        /* Main Container - Centered Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-lg);
+            padding: var(--space-md);
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: var(--space-xl) var(--space-lg);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-family: var(--font-secondary);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: var(--space-sm);
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.125rem;
+            color: var(--color-primary);
+            font-weight: 500;
+            margin-bottom: var(--space-md);
+            opacity: 0.9;
+        }
+
+        .header .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: var(--color-secondary);
+            color: var(--color-dark);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Main Content Grid */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-lg);
+        }
+
+        /* Chat Interface */
+        .chat-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-header {
+            background: var(--color-dark);
+            color: var(--color-white);
+            padding: var(--space-md) var(--space-lg);
+            font-weight: 600;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .chat-container {
+            padding: var(--space-lg);
+            min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-light-blue) transparent;
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--color-secondary);
+            border-radius: 3px;
+        }
+
+        .message {
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.5;
+            box-shadow: var(--shadow-sm);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            background: var(--color-primary);
+            color: var(--color-white);
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: var(--color-secondary);
+            color: var(--color-dark);
+            align-self: flex-start;
+            margin-right: auto;
+        }
+
+        .message {
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.5;
+            box-shadow: var(--shadow-sm);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            background: var(--color-primary);
+            color: var(--color-white);
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: var(--color-light-blue);
+            color: var(--color-dark);
+            align-self: flex-start;
+            margin-right: auto;
+        }
+
+        /* Controls Section */
+        .controls-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(10px);
+        }
+
+        .controls-header {
+            font-family: var(--font-secondary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-dark);
+            margin-bottom: var(--space-md);
+            text-align: center;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        /* Button System */
+        .btn {
+            font-family: var(--font-primary);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: var(--space-md) var(--space-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            text-decoration: none;
+            white-space: nowrap;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--color-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-dark);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--color-primary);
+            color: var(--color-white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Cancel Button Styles */
+        .btn-cancel {
+            background: var(--color-cancel);
+            color: white;
+            border: 2px solid #dc2626;
+        }
+
+        .btn-cancel:hover:not(:disabled) {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn:disabled::before {
+            display: none;
+        }
+
+        /* Input Section */
+        .input-section {
+            border-top: 1px solid var(--color-secondary);
+            padding-top: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .input-group {
+            display: flex;
+            gap: var(--space-md);
+            align-items: stretch;
+        }
+
+        .input-field {
+            flex: 1;
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            padding: var(--space-md);
+            border: 2px solid var(--color-secondary);
+            border-radius: var(--radius-md);
+            background: var(--color-white);
+            color: var(--color-dark);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(240, 135, 135, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: rgba(45, 55, 72, 0.5);
+        }
+
+        /* Sample Questions */
+        .questions-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(10px);
+        }
+
+        .questions-header {
+            font-family: var(--font-secondary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-dark);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .question-card {
+            background: var(--color-white);
+            border: 2px solid var(--color-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .question-card:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Status Messages */
+        .status {
+            margin: var(--space-md) 0;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 0.95rem;
+        }
+
+        .status.success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #15803d;
+            border-left: 4px solid #22c55e;
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border-left: 4px solid #ef4444;
+        }
+
+        .status.info {
+            background: rgba(63, 114, 175, 0.1);
+            color: var(--color-primary);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(240, 135, 135, 0.3);
+            border-top: 3px solid var(--color-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Memory Panel Styles */
+        .memory-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            margin-top: var(--space-md);
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .memory-header {
+            font-weight: 600;
+            color: var(--color-dark);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .memory-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-sm);
+            font-size: 0.9rem;
+        }
+
+        .memory-stat {
+            text-align: center;
+            padding: var(--space-xs);
+            background: var(--color-accent);
+            border-radius: var(--radius-sm);
+        }
+
+        .memory-stat .value {
+            font-weight: 600;
+            color: var(--color-primary);
+            font-size: 1.1em;
+        }
+
+        .memory-stat .label {
+            color: var(--color-dark);
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        /* Processing Indicator */
+        .processing-indicator {
+            display: none;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: rgba(240, 135, 135, 0.1);
+            border-radius: var(--radius-md);
+            margin: var(--space-md) 0;
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .processing-indicator.active {
+            display: flex;
+        }
+
+        /* Responsive Design - Mobile First */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-sm);
+                gap: var(--space-md);
+            }
+            
+            .header {
+                padding: var(--space-lg) var(--space-md);
+            }
+            
+            .header h1 {
+                font-size: clamp(1.75rem, 6vw, 2.5rem);
+            }
+            
+            .voice-controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .questions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-container {
+                min-height: 300px;
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --space-lg: 1.25rem;
+                --space-xl: 2rem;
+            }
+            
+            .header {
+                padding: var(--space-md);
+            }
+            
+            .controls-section,
+            .questions-section,
+            .chat-section {
+                padding: var(--space-md);
+            }
+        }
+
+        @media (min-width: 769px) {
+            .main-content {
+                grid-template-columns: 2fr 1fr;
+                align-items: start;
+            }
+            
+            .chat-section {
+                grid-row: 1 / 3;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: var(--space-lg);
+            }
+            
+            .voice-controls {
+                justify-content: space-around;
+            }
+            
+            .questions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .voice-controls,
+            .input-section {
+                display: none;
+            }
+        }
+
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --color-coral: #E53E3E;
+                --color-peach: #F6AD55;
+                --color-cream: #FEEBC8;
+                --color-mint: #C6F6D5;
+                --color-primary: #E53E3E;
+                --color-secondary: #F6AD55;
+                --color-background: #FEEBC8;
+                --color-accent: #C6F6D5;
+                --color-white: #ffffff;
+                --color-dark: #000000;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1>🎤 Voice Interview Assistant</h1>
+            <p class="subtitle">Ask me about Mayank's background, skills, and experience</p>
+            <div class="badge">
+                <span>✨</span>
+                <span>Powered by DSPy & Web Speech API</span>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="main-content">
+            <!-- Chat Interface -->
+            <section class="chat-section">
+                <div class="chat-header">
+                    <span>💬</span>
+                    <span>Conversation</span>
+                </div>
+                <div class="chat-container" id="chatContainer">
+                    <div class="message bot-message">
+                        <strong>Hello!</strong> I'm Mayank's AI interview assistant. I can answer questions about his background, technical skills, and professional experience. 
+                        <br><br>
+                        <strong>Try asking:</strong>
+                        <br>• "What's your life story?"
+                        <br>• "What's your superpower?"
+                        <br>• "What are your growth areas?"
+                        <br><br>
+                        <em>You can speak your questions or type them below!</em>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Controls Section -->
+            <section class="controls-section">
+                <h2 class="controls-header">🎙️ Voice Controls</h2>
+                <div class="voice-controls">
+                    <button class="btn btn-primary" id="listenBtn" onclick="startListening()">
+                        <span>🎤</span>
+                        <span>Ask with Voice</span>
+                    </button>
+                    <button class="btn btn-secondary" id="speakBtn" onclick="speakLastResponse()" disabled>
+                        <span>🔊</span>
+                        <span>Repeat Answer</span>
+                    </button>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="questionInput" 
+                            class="input-field"
+                            placeholder="Or type your question here..." 
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button class="btn btn-primary" onclick="askQuestion()">
+                            <span>📤</span>
+                            <span>Send</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sample Questions -->
+            <section class="questions-section">
+                <h3 class="questions-header">
+                    <span>💡</span>
+                    <span>Sample Questions</span>
+                </h3>
+                <div class="questions-grid">
+                    <div class="question-card" onclick="askSampleQuestion(this)">
+                        What should we know about your life story in a few sentences?
+                    </div>
+                    <div class="question-card" onclick="askSampleQuestion(this)">
+                        What's your #1 superpower?
+                    </div>
+                    <div class="question-card" onclick="askSampleQuestion(this)">
+                        What are the top 3 areas you'd like to grow in?
+                    </div>
+                    <div class="question-card" onclick="askSampleQuestion(this)">
+                        What misconception do your coworkers have about you?
+                    </div>
+                    <div class="question-card" onclick="askSampleQuestion(this)">
+                        How do you push your boundaries and limits?
+                    </div>
+                    <div class="question-card" onclick="askSampleQuestion(this)">
+                        Tell me about a challenging project you worked on?
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Status Messages -->
+        <div id="status"></div>
+    </div>
+
+    <script>
+        // Enhanced JavaScript for Professional Voice Interview Assistant
+        
+        // Global variables
+        let isListening = false;
+        let lastResponse = null;
+        let conversationCount = 0;
+        let currentSessionId = 'session_' + Date.now();
+        let isProcessing = false;
+
+        /**
+         * Enhanced status display with better UX
+         */
+        function showStatus(message, type = 'info', duration = 5000) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `
+                <div class="status-icon">${getStatusIcon(type)}</div>
+                <div class="status-text">${message}</div>
+            `;
+            statusDiv.className = `status ${type}`;
+            
+            // Auto-clear status after duration
+            setTimeout(() => {
+                statusDiv.textContent = '';
+                statusDiv.className = 'status';
+            }, duration);
+        }
+
+        /**
+         * Get appropriate icon for status type
+         */
+        function getStatusIcon(type) {
+            const icons = {
+                'success': '✅',
+                'error': '❌',
+                'info': 'ℹ️',
+                'warning': '⚠️'
+            };
+            return icons[type] || 'ℹ️';
+        }
+
+        /**
+         * Enhanced message display with animations
+         */
+        function addMessage(text, isUser = false) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            // Add timestamp for longer conversations
+            conversationCount++;
+            if (conversationCount > 2) {
+                const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                messageDiv.innerHTML = `
+                    <div class="message-content">${text}</div>
+                    <div class="message-time" style="font-size: 0.8em; opacity: 0.7; margin-top: 0.5rem;">${timestamp}</div>
+                `;
+            } else {
+                messageDiv.textContent = text;
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            
+            // Smooth scroll to bottom
+            chatContainer.scrollTo({
+                top: chatContainer.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        /**
+         * Enhanced Web Speech Recognition with better error handling
+         */
+        function startWebSpeechRecognition() {
+            // Check browser support with better messaging
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showStatus('Voice recognition is not supported in this browser. Please use Chrome, Edge, or Safari for voice features.', 'error');
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+
+            // Enhanced recognition settings
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
+
+            const listenBtn = document.getElementById('listenBtn');
+            const originalContent = listenBtn.innerHTML;
+            
+            listenBtn.disabled = true;
+            listenBtn.innerHTML = '<span class="loading"></span> <span>Listening...</span>';
+            showStatus('🎤 Listening... Speak clearly and I\'ll process your question!', 'info');
+
+            let interimTranscript = '';
+            let finalTranscript = '';
+
+            recognition.onresult = function(event) {
+                interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                // Show interim results for better feedback
+                if (interimTranscript) {
+                    showStatus(`Hearing: "${interimTranscript}"...`, 'info', 1000);
+                }
+            };
+
+            recognition.onend = function() {
+                listenBtn.disabled = false;
+                listenBtn.innerHTML = originalContent;
+                
+                if (finalTranscript.trim()) {
+                    console.log('Final transcript:', finalTranscript);
+                    addMessage(finalTranscript, true);
+                    showStatus('Processing your question...', 'info');
+                    getAIResponse(finalTranscript);
+                } else {
+                    showStatus('No speech detected. Please try again or use text input.', 'warning');
+                }
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                listenBtn.disabled = false;
+                listenBtn.innerHTML = originalContent;
+                
+                const errorMessages = {
+                    'network': 'Network error. Please check your connection and try again.',
+                    'not-allowed': 'Microphone access denied. Please allow microphone access and try again.',
+                    'no-speech': 'No speech detected. Please try speaking again.',
+                    'audio-capture': 'No microphone found. Please connect a microphone and try again.',
+                    'service-not-allowed': 'Speech service not allowed. Please try again later.'
+                };
+                
+                const message = errorMessages[event.error] || `Speech recognition error: ${event.error}. Please try again or use text input.`;
+                showStatus(message, 'error');
+            };
+
+            recognition.start();
+        }
+
+        // Global variables for speech control
+        let currentUtterance = null;
+        let isSpeaking = false;
+
+        /**
+         * Enhanced Text-to-Speech with real-time cancellation and human-like voice
+         */
+        function speakResponse(text) {
+            if ('speechSynthesis' in window) {
+                // Stop any current speech
+                stopSpeaking();
+                
+                // Clean text for better pronunciation
+                const cleanText = text
+                    .replace(/\*\*(.*?)\*\*/g, '$1') // Remove markdown
+                    .replace(/\*(.*?)\*/g, '$1')
+                    .replace(/`(.*?)`/g, '$1')
+                    .replace(/\bAPI\b/g, 'A P I')
+                    .replace(/\bUI\b/g, 'User Interface')
+                    .replace(/\bdspy\b/gi, 'D S P Y')
+                    .replace(/\bmem0\b/gi, 'mem zero');
+                
+                currentUtterance = new SpeechSynthesisUtterance(cleanText);
+                
+                // Human-like voice settings
+                currentUtterance.rate = 0.85;  // Slower for clarity
+                currentUtterance.pitch = 1.1;  // Slightly higher for warmth
+                currentUtterance.volume = 0.9;
+                
+                // Get best natural voice
+                const voices = speechSynthesis.getVoices();
+                const naturalVoices = [
+                    'Samantha', 'Alex', 'Google US English', 'Microsoft Aria Online',
+                    'Microsoft Zira Desktop', 'Karen', 'Daniel'
+                ];
+                
+                let selectedVoice = null;
+                for (const voiceName of naturalVoices) {
+                    selectedVoice = voices.find(voice => 
+                        voice.name.includes(voiceName) && voice.lang.startsWith('en')
+                    );
+                    if (selectedVoice) break;
+                }
+                
+                if (selectedVoice) {
+                    currentUtterance.voice = selectedVoice;
+                    console.log('🎤 Using voice:', selectedVoice.name);
+                }
+                
+                // Speech event handlers
+                currentUtterance.onstart = function() {
+                    isSpeaking = true;
+                    showSpeechControls(true);
+                    showStatus('🔊 Speaking... (Press ESC to stop)', 'info');
+                };
+                
+                currentUtterance.onend = function() {
+                    isSpeaking = false;
+                    currentUtterance = null;
+                    showSpeechControls(false);
+                    showStatus('✅ Response complete', 'success', 2000);
+                };
+                
+                currentUtterance.onerror = function() {
+                    isSpeaking = false;
+                    currentUtterance = null;
+                    showSpeechControls(false);
+                    showStatus('Speech error occurred', 'error');
+                };
+                
+                speechSynthesis.speak(currentUtterance);
+            } else {
+                showStatus('Text-to-speech not supported in this browser.', 'warning');
+            }
+        }
+
+        /**
+         * Stop current speech
+         */
+        function stopSpeaking() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            isSpeaking = false;
+            currentUtterance = null;
+            showSpeechControls(false);
+        }
+
+        /**
+         * Show/hide simple speech controls
+         */
+        function showSpeechControls(show) {
+            let controls = document.getElementById('speechControls');
+            
+            if (!controls && show) {
+                controls = document.createElement('div');
+                controls.id = 'speechControls';
+                controls.style.cssText = `
+                    background: rgba(240, 135, 135, 0.1);
+                    border: 1px solid var(--color-coral);
+                    border-radius: 8px;
+                    padding: 12px;
+                    margin: 12px 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    animation: slideIn 0.3s ease;
+                `;
+                controls.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="color: var(--color-coral);">🔊</span>
+                        <span>Speaking...</span>
+                    </div>
+                    <button onclick="stopSpeaking()" style="
+                        background: var(--color-coral);
+                        color: white;
+                        border: none;
+                        padding: 6px 12px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    ">Stop</button>
+                `;
+                
+                const chatSection = document.querySelector('.chat-section');
+                chatSection.parentNode.insertBefore(controls, chatSection.nextSibling);
+            }
+            
+            if (controls) {
+                controls.style.display = show ? 'flex' : 'none';
+            }
+        }
+
+        /**
+         * Start listening with enhanced UX
+         */
+        async function startListening() {
+            // Request microphone permission first if needed
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                try {
+                    await navigator.mediaDevices.getUserMedia({ audio: true });
+                    startWebSpeechRecognition();
+                } catch (error) {
+                    showStatus('Microphone access required for voice input. Please allow microphone access.', 'error');
+                }
+            } else {
+                startWebSpeechRecognition();
+            }
+        }
+
+        /**
+         * Enhanced question asking with validation and cancel support
+         */
+        async function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            
+            if (!question) {
+                showStatus('Please enter a question before sending.', 'warning');
+                input.focus();
+                return;
+            }
+
+            if (question.length < 3) {
+                showStatus('Please enter a more detailed question.', 'warning');
+                input.focus();
+                return;
+            }
+
+            addMessage(question, true);
+            input.value = '';
+            
+            // Show processing indicator with cancel button
+            showProcessingIndicator(true);
+            isProcessing = true;
+            
+            await getAIResponse(question);
+        }
+
+        /**
+         * Enhanced keyboard handling
+         */
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                askQuestion();
+            }
+        }
+
+        /**
+         * Enhanced sample question handling
+         */
+        function askSampleQuestion(element) {
+            const question = element.textContent.trim();
+            const input = document.getElementById('questionInput');
+            
+            // Visual feedback
+            element.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                element.style.transform = '';
+            }, 150);
+            
+            input.value = question;
+            askQuestion();
+        }
+
+        /**
+         * Enhanced AI response handling with cancellation support
+         */
+        async function getAIResponse(question) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                
+                const response = await fetch('/api/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        question: question,
+                        session_id: currentSessionId 
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+                showProcessingIndicator(false);
+                isProcessing = false;
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    addMessage(data.response, false);
+                    
+                    // Auto-play response with user preference
+                    speakResponse(data.response);
+                    
+                    // Enable repeat button
+                    document.getElementById('speakBtn').disabled = false;
+                    lastResponse = data.response;
+                    
+                    showStatus('✨ Response generated successfully!', 'success');
+                    
+                    // Update memory stats
+                    updateMemoryStats();
+                } else {
+                    addMessage(`I apologize, but I encountered an issue: ${data.error}`, false);
+                    showStatus(`Error generating response: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showProcessingIndicator(false);
+                isProcessing = false;
+                
+                if (error.name === 'AbortError') {
+                    showStatus('Request cancelled by user.', 'info');
+                    addMessage('Response generation was cancelled.', false);
+                } else {
+                    showStatus(`Connection error: ${error.message}`, 'error');
+                    addMessage('I apologize, but I\'m having trouble connecting. Please try again.', false);
+                }
+            }
+        }
+
+        /**
+         * Enhanced cancel function for both AI generation and speech
+         */
+        async function cancelResponse() {
+            let cancelled = false;
+            
+            // Cancel speech if speaking
+            if (isSpeaking) {
+                stopSpeaking();
+                showStatus('✅ Speech stopped', 'success');
+                cancelled = true;
+            }
+            
+            // Cancel AI generation if processing
+            if (isProcessing) {
+                try {
+                    const response = await fetch('/api/cancel', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ session_id: currentSessionId })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        showStatus('✅ AI generation cancelled', 'success');
+                        showProcessingIndicator(false);
+                        isProcessing = false;
+                        cancelled = true;
+                    }
+                } catch (error) {
+                    showStatus('Error cancelling AI request', 'error');
+                }
+            }
+            
+            if (!cancelled) {
+                showStatus('Nothing to cancel', 'info');
+            }
+        }
+
+        /**
+         * Show/hide processing indicator with cancel button
+         */
+        function showProcessingIndicator(show) {
+            let indicator = document.getElementById('processingIndicator');
+            
+            if (!indicator) {
+                // Create processing indicator if it doesn't exist
+                indicator = document.createElement('div');
+                indicator.id = 'processingIndicator';
+                indicator.className = 'processing-indicator';
+                indicator.innerHTML = `
+                    <div class="loading"></div>
+                    <span>Generating intelligent response...</span>
+                    <button class="btn btn-cancel" onclick="cancelResponse()" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                        <span>✕</span>
+                        <span>Cancel</span>
+                    </button>
+                `;
+                
+                // Insert after chat container
+                const chatSection = document.querySelector('.chat-section');
+                chatSection.parentNode.insertBefore(indicator, chatSection.nextSibling);
+            }
+            
+            if (show) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        }
+
+        /**
+         * Update memory stats
+         */
+        async function updateMemoryStats() {
+            try {
+                const response = await fetch('/api/conversation-summary');
+                const data = await response.json();
+                
+                if (data.success && data.summary) {
+                    showMemoryPanel(data.summary);
+                }
+            } catch (error) {
+                console.log('Memory stats not available:', error);
+            }
+        }
+
+        /**
+         * Show memory panel with conversation stats
+         */
+        function showMemoryPanel(summary) {
+            let memoryPanel = document.getElementById('memoryPanel');
+            
+            if (!memoryPanel) {
+                memoryPanel = document.createElement('div');
+                memoryPanel.id = 'memoryPanel';
+                memoryPanel.className = 'memory-panel';
+                
+                // Insert after controls section
+                const controlsSection = document.querySelector('.controls-section');
+                controlsSection.parentNode.insertBefore(memoryPanel, controlsSection.nextSibling);
+            }
+            
+            memoryPanel.innerHTML = `
+                <div class="memory-header">
+                    <span>🧠</span>
+                    <span>Conversation Memory</span>
+                </div>
+                <div class="memory-stats">
+                    <div class="memory-stat">
+                        <div class="value">${summary.question_count || 0}</div>
+                        <div class="label">Questions</div>
+                    </div>
+                    <div class="memory-stat">
+                        <div class="value">${summary.topics ? summary.topics.length : 0}</div>
+                        <div class="label">Topics</div>
+                    </div>
+                    <div class="memory-stat">
+                        <div class="value">${summary.session_duration || '0 min'}</div>
+                        <div class="label">Duration</div>
+                    </div>
+                </div>
+                <div style="margin-top: var(--space-sm); font-size: 0.9em; opacity: 0.8;">
+                    Topics discussed: ${summary.topics ? summary.topics.join(', ') : 'None yet'}
+                </div>
+                <button class="btn btn-secondary" onclick="clearConversation()" style="margin-top: var(--space-sm); font-size: 0.8rem; padding: 0.5rem 1rem;">
+                    🔄 Clear Memory
+                </button>
+            `;
+        }
+
+        /**
+         * Clear conversation memory
+         */
+        async function clearConversation() {
+            if (confirm('Are you sure you want to clear the conversation memory? This cannot be undone.')) {
+                try {
+                    const response = await fetch('/api/clear-conversation', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        showStatus('✅ Conversation memory cleared', 'success');
+                        
+                        // Clear chat container
+                        const chatContainer = document.getElementById('chatContainer');
+                        chatContainer.innerHTML = `
+                            <div class="message bot-message">
+                                <strong>Memory cleared!</strong> I'm ready for a fresh conversation about Mayank's background and experience.
+                            </div>
+                        `;
+                        
+                        // Hide memory panel
+                        const memoryPanel = document.getElementById('memoryPanel');
+                        if (memoryPanel) {
+                            memoryPanel.style.display = 'none';
+                        }
+                        
+                        // Reset session
+                        currentSessionId = 'session_' + Date.now();
+                        conversationCount = 0;
+                        
+                    } else {
+                        showStatus('Error clearing memory', 'error');
+                    }
+                } catch (error) {
+                    showStatus('Error clearing memory', 'error');
+                }
+            }
+        }
+
+        /**
+         * Enhanced repeat functionality
+         */
+        function speakLastResponse() {
+            if (lastResponse) {
+                speakResponse(lastResponse);
+                showStatus('🔄 Repeating last response...', 'info');
+            } else {
+                showStatus('No response available to repeat.', 'warning');
+            }
+        }
+
+        /**
+         * Enhanced initialization with better status reporting
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize with loading state
+            showStatus('🚀 Initializing Voice Interview Assistant...', 'info');
+            
+            // Test API connection
+            fetch('/api/health')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'healthy') {
+                        showStatus('✅ Voice Interview Assistant is ready! Ask your first question.', 'success');
+                    } else {
+                        showStatus('⚠️ System partially ready. Some features may be limited.', 'warning');
+                    }
+                })
+                .catch(() => {
+                    showStatus('⚠️ Cannot connect to AI service. Please refresh the page.', 'error');
+                });
+            
+            // Check and request microphone permission
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(() => {
+                        console.log('✅ Microphone access granted');
+                    })
+                    .catch((error) => {
+                        console.warn('Microphone access:', error.message);
+                        if (error.name === 'NotAllowedError') {
+                            showStatus('ℹ️ For voice features, please allow microphone access when prompted.', 'info', 8000);
+                        }
+                    });
+            }
+            
+            // Ensure voices are loaded for text-to-speech
+            if ('speechSynthesis' in window) {
+                speechSynthesis.onvoiceschanged = function() {
+                    console.log('✅ Text-to-speech voices loaded');
+                };
+            }
+            
+            // Add simple keyboard shortcuts
+            document.addEventListener('keydown', function(event) {
+                // Escape key to cancel anything
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    cancelResponse();
+                }
+                
+                // Enter key to send message when input is focused
+                if (event.key === 'Enter' && event.target.id === 'questionInput') {
+                    event.preventDefault();
+                    askQuestion();
+                }
+            });
+            
+            // Focus on input field for immediate typing
+            document.getElementById('questionInput').focus();
+            
+            // Initialize memory stats after a short delay
+            setTimeout(updateMemoryStats, 2000);
+        });
+    </script>
+</body>
+</html>

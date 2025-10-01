@@ -7,7 +7,7 @@ A **professional, interview-ready voice bot** that showcases clean coding practi
 ### 🎯 Key Features
 
 1. **Voice Interaction**: Speak questions, get spoken answers
-2. **AI-Powered Responses**: Uses OpenAI GPT-3.5 for intelligent, context-aware answers
+2. **AI-Powered Responses**: Uses OpenAI 4o-mini for intelligent, context-aware answers
 3. **Professional UI**: Clean, responsive design suitable for interviews
 4. **Easy to Explain**: Simple tech stack with clear architecture
 

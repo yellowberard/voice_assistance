@@ -1,6 +1,6 @@
 from neo4j import GraphDatabase
 import os
-from typing import Dict, List, Any
+from typing import Dict, Any
 
 class SimpleSchemaExtractor:
     def __init__(self):
@@ -62,7 +62,7 @@ class SimpleSchemaExtractor:
                         schema_parts.append(f"  Properties: {prop_summary}")
                 
                 # Get relationship patterns using node names
-                schema_parts.append(f"\nRELATIONSHIP PATTERNS:")
+                schema_parts.append("\nRELATIONSHIP PATTERNS:")
                 relationships_query = """
                 MATCH (a)-[r]->(b) 
                 WHERE a.name IS NOT NULL AND b.name IS NOT NULL
@@ -88,7 +88,7 @@ class SimpleSchemaExtractor:
                 
                 stats = list(session.run(stats_query))
                 if stats:
-                    schema_parts.append(f"\nENTITY TYPE SUMMARY:")
+                    schema_parts.append("\nENTITY TYPE SUMMARY:")
                     for stat in stats:
                         schema_parts.append(f"• {stat['node_type']}: {stat['count']} entities")
                 

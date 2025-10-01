@@ -26,12 +26,11 @@ class PersonalInfo:
 PERSONAL_INFO = PersonalInfo(
     name="Mayank Goel",
     role="Software Developer",
-    experience="2+ years",
-    
-    life_story="""I'm a passionate software developer with 2+ years of experience building 
-    web applications. I started coding in college and fell in love with creating solutions 
-    that make people's lives easier. I've worked on various projects from e-commerce 
-    platforms to data visualization tools.""",
+    experience="1+ years",
+
+    life_story="""I'm a passionate software developer with 1+ years of experience in various fields
+    . I started coding in college and fell in love with creating solutions
+    that make people's lives easier.""",
     
     superpower="""My #1 superpower is problem-solving and breaking down complex technical 
     challenges into manageable pieces. I have a knack for debugging and finding creative 
@@ -40,6 +39,7 @@ PERSONAL_INFO = PersonalInfo(
     growth_areas=[
         "System design and architecture for large-scale applications",
         "Machine learning and AI integration in web applications", 
+        "Cloud systems and DevOps practices",
         "Leadership and mentoring junior developers"
     ],
     
@@ -68,5 +68,5 @@ class Config:
     SPEECH_TIMEOUT = 10  # seconds
     
     # Response settings
-    MAX_RESPONSE_TOKENS = 15000
+    MAX_RESPONSE_TOKENS = 500
     RESPONSE_TEMPERATURE = 0.7

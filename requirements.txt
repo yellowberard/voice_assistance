@@ -1,0 +1,22 @@
+# Core web framework - simple and well-documented
+flask==3.0.0
+flask-cors==4.0.0
+
+# Environment management
+python-dotenv==1.0.0
+
+# AI/ML - DSPy for structured AI programming
+dspy-ai==2.4.9
+openai==1.3.0
+
+# Database - Neo4j for knowledge graph
+neo4j==5.14.1
+
+# Memory - mem0 for conversation memory
+mem0ai==0.0.8
+
+# Web Speech API handles all voice processing in the browser!
+# No need for: speechrecognition, gtts, pydub, pygame, pyaudio
+
+# Data handling
+requests==2.31.0

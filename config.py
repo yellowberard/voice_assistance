@@ -60,8 +60,10 @@ class Config:
     DEBUG = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
     
     # OpenAI settings
-    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-    OPENAI_MODEL = 'gpt-4o-mini'
+    # OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+    # OPENAI_MODEL = 'gpt-4o-mini'
+    GEMINI_MODEL = 'gemini/gemini-2.5-flash-lite'
     
     # Voice settings
     VOICE_LANGUAGE = 'en'

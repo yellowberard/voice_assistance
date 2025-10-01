@@ -209,8 +209,8 @@ class DSPyInterviewAssistant:
         try:
             # Configure DSPy to use OpenAI
             lm = dspy.LM(
-                model=Config.OPENAI_MODEL,
-                api_key=Config.OPENAI_API_KEY,
+                model=Config.GEMINI_MODEL,
+                api_key=Config.GEMINI_API_KEY,
                 max_tokens=Config.MAX_RESPONSE_TOKENS,
                 temperature=Config.RESPONSE_TEMPERATURE,
             )

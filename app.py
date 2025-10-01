@@ -285,7 +285,7 @@ if __name__ == '__main__':
     print("🚀 Starting Voice Interview Bot with DSPy...")
     print(f"👤 Candidate: {PERSONAL_INFO.name}")
     print(f"💼 Role: {PERSONAL_INFO.role}")
-    print("🔑 OpenAI API Key Configured: {}".format(bool(Config.OPENAI_API_KEY)))
+    print("🔑 OpenAI API Key Configured: {}".format(bool(Config.GEMINI_API_KEY)))
     print("🤖 AI Framework: DSPy (Structured AI Programming)")
     print("🧠 DSPy Status: {}".format("✅ Ready" if bot.ai_assistant else "❌ Not Available"))
     print("🎤 Voice Method: Web Speech API (Browser-based)")

@@ -21,30 +21,39 @@ class ConversationMemory:
         
         if MEM0_AVAILABLE:
             try:
-                # Initialize mem0 with configuration
-                config = {
-                    "llm": {
-                        "provider": "openai",
-                        "config": {
-                            "model": "gpt-4o-mini",
-                            "api_key": os.getenv('OPENAI_API_KEY')
-                        }
-                    },
-                    "embedder": {
-                        "provider": "openai",
-                        "config": {
-                            "model": "text-embedding-ada-002",
-                            "api_key": os.getenv('OPENAI_API_KEY')
+                # Initialize mem0 with Google AI configuration
+                gemini_api_key = os.getenv('GEMINI_API_KEY')
+                
+                if not gemini_api_key:
+                    print("⚠️ No Gemini API key found, using local memory only")
+                    self.memory = None
+                    self.memory_enabled = False
+                else:
+                    
+                    config = {
+                        "llm": {
+                            
+                            "provider": "gemini",
+                            "config": {
+                                "api_key": gemini_api_key,
+                                "model": "gemini-2.0-flash-lite",
+                                "temperature": 0.2,
+                                "max_tokens": 2000,
+                                "top_p": 1.0
+                            }
                         }
                     }
-                }
-                
-                self.memory = Memory(config=config) #type:ignore
-                self.memory_enabled = True
-                print(f"✅ mem0 Memory initialized for user: {self.user_id}")
+                    # Set environment variables as required by mem0
+                    os.environ["GOOGLE_API_KEY"] = gemini_api_key
+                    
+                    # Create mem0 Memory instance with Google AI config
+                    self.memory = Memory.from_config(config)
+                    self.memory_enabled = True
+                    print(f"✅ mem0 Memory initialized with Gemini for user: {self.user_id}")
                 
             except Exception as e:
-                print(f"❌ Failed to initialize mem0: {str(e)}")
+                print(f"❌ Failed to initialize mem0 with Gemini: {str(e)}")
+                print("🔄 Falling back to local memory")
                 self.memory = None
                 self.memory_enabled = False
         else:
@@ -75,20 +84,19 @@ class ConversationMemory:
         # Add to mem0 if available
         if self.memory_enabled and self.memory:
             try:
-                # Create memory content for mem0
-                memory_content = f"""
-                User asked: "{question}"
-                Response given: "{response}"
-                Context: Interview conversation about Mayank Goel's background
-                """
+                # Create conversation messages format as per mem0 docs
+                messages = [
+                    {"role": "user", "content": question},
+                    {"role": "assistant", "content": response}
+                ]
                 
-                self.memory.add(
-                    memory_content,
+                # Use mem0's recommended format with messages
+                result = self.memory.add(
+                    messages,
                     user_id=self.user_id,
                     metadata={
                         "session_id": self.session_id,
-                        "interaction_type": "qa_pair",
-                        "question_category": self._categorize_question(question),
+                        "category": "interview_qa",
                         **(metadata or {})
                     }
                 )
@@ -97,6 +105,7 @@ class ConversationMemory:
                 
             except Exception as e:
                 print(f"❌ Error adding to mem0: {str(e)}")
+                print("🔄 Using local memory instead")
                 self._add_to_local_memory(question, response)
         else:
             self._add_to_local_memory(question, response)
@@ -115,15 +124,20 @@ class ConversationMemory:
                 if relevant_memories:
                     context_parts = ["=== CONVERSATION CONTEXT ==="]
                     for memory in relevant_memories:
+                        # Handle different memory formats
                         if isinstance(memory, dict):
-                            context_parts.append(f"Previous context: {memory.get('memory', '')}")
+                            memory_text = memory.get('memory', '') or memory.get('text', '') or str(memory)
                         else:
-                            context_parts.append(f"Previous context: {memory}")
+                            memory_text = str(memory)
+                        
+                        if memory_text and len(memory_text.strip()) > 0:
+                            context_parts.append(f"Previous: {memory_text[:200]}...")
                     
                     return "\n".join(context_parts)
                     
             except Exception as e:
                 print(f"❌ Error retrieving from mem0: {str(e)}")
+                print("🔄 Using local memory instead")
         
         # Fallback to local memory
         return self._get_local_context(current_question, limit)

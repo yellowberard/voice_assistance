@@ -237,8 +237,8 @@ def health_check():
     - DSPy integration status
     """
     try:
-        # Check if OpenAI API key is configured
-        api_key_configured = bool(Config.OPENAI_API_KEY)
+        # Check if Gemini API key is configured
+        api_key_configured = bool(Config.GEMINI_API_KEY)
         
         # Check DSPy status
         dspy_status = "initialized" if bot.ai_assistant else "not available"
@@ -271,29 +271,29 @@ def internal_error(error):
     """Handle 500 errors gracefully"""
     return jsonify({"error": "Internal server error"}), 500
 
-# Application Entry Point
-if __name__ == '__main__':
-    """
-    Run the Flask application
+# # Application Entry Point
+# if __name__ == '__main__':
+#     """
+#     Run the Flask application
     
-    This demonstrates:
-    - Environment-based configuration
-    - Development vs production settings
-    - Proper application startup
-    - DSPy integration status
-    """
-    print("🚀 Starting Voice Interview Bot with DSPy...")
-    print(f"👤 Candidate: {PERSONAL_INFO.name}")
-    print(f"💼 Role: {PERSONAL_INFO.role}")
-    print("🔑 OpenAI API Key Configured: {}".format(bool(Config.GEMINI_API_KEY)))
-    print("🤖 AI Framework: DSPy (Structured AI Programming)")
-    print("🧠 DSPy Status: {}".format("✅ Ready" if bot.ai_assistant else "❌ Not Available"))
-    print("🎤 Voice Method: Web Speech API (Browser-based)")
-    print("🔊 Audio: Browser Text-to-Speech")
+#     This demonstrates:
+#     - Environment-based configuration
+#     - Development vs production settings
+#     - Proper application startup
+#     - DSPy integration status
+#     """
+#     print("🚀 Starting Voice Interview Bot with DSPy...")
+#     print(f"👤 Candidate: {PERSONAL_INFO.name}")
+#     print(f"💼 Role: {PERSONAL_INFO.role}")
+#     print("🔑 OpenAI API Key Configured: {}".format(bool(Config.GEMINI_API_KEY)))
+#     print("🤖 AI Framework: DSPy (Structured AI Programming)")
+#     print("🧠 DSPy Status: {}".format("✅ Ready" if bot.ai_assistant else "❌ Not Available"))
+#     print("🎤 Voice Method: Web Speech API (Browser-based)")
+#     print("🔊 Audio: Browser Text-to-Speech")
     
-    # Run with appropriate settings based on environment
-    app.run(
-        debug=Config.DEBUG,
-        host='0.0.0.0',
-        port=int(os.environ.get('PORT', 8000))  # Changed from 5000 to 8000
-    )
+#     # Run with appropriate settings based on environment
+#     app.run(
+#         debug=Config.DEBUG,
+#         host='0.0.0.0',
+#         port=int(os.environ.get('PORT', 8000))  # Changed from 5000 to 8000
+#     )

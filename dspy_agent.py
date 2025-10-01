@@ -65,9 +65,15 @@ class InterviewBot(dspy.Module):
         # Use DSPy's ChainOfThought for better reasoning with enhanced signature
         self.respond = dspy.ChainOfThought(InterviewResponse)
         
-        # Initialize memory
+        # Initialize memory with error handling
         if MEMORY_AVAILABLE:
-            self.memory = ConversationMemory()
+            try:
+                self.memory = ConversationMemory()
+                print("✅ Memory integration initialized in DSPy agent")
+            except Exception as e:
+                print(f"❌ Failed to initialize memory in DSPy agent: {str(e)}")
+                print("🔄 DSPy agent will work without memory features")
+                self.memory = None
         else:
             self.memory = None
         

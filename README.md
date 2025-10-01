@@ -1,4 +1,4 @@
-# 🎤 Enhanced Voice Interview Bot with Knowledge Graph
+# 🎤 Enhanced Voice Interview Bot
 
 A sophisticated voice-enabled interview bot that combines personal information with knowledge graph context to provide intelligent, contextual responses. Built with Python, Flask, DSPy, and Neo4j for enhanced AI capabilities.
 
@@ -10,7 +10,7 @@ This bot is designed for interview scenarios where you want to showcase:
 - Understanding of web development fundamentals
 - Integration of AI and voice technologies
 
-## 🛠️ Tech Stack (Easy to Explain!)
+## 🛠️ Tech Stack
 
 ### Backend (Python)
 - **Flask**: Lightweight web framework (simple and well-documented)
@@ -19,17 +19,18 @@ This bot is designed for interview scenarios where you want to showcase:
 - **SpeechRecognition**: Convert voice input to text
 - **gTTS (Google Text-to-Speech)**: Convert responses back to voice
 - **Python-dotenv**: Environment variable management
+- **Neo4j**: A knowledge Graph to improve agent context
 
 ### Frontend
 - **HTML/CSS/JavaScript**: Clean, vanilla implementation (no complex frameworks)
 - **Responsive Design**: Works on desktop and mobile devices
 
 ### Why This Stack?
-1. **Simple to Explain**: Clean architecture with well-defined components
-2. **Modern AI**: DSPy provides structured AI programming vs raw API calls
-3. **Industry Standard**: All libraries are widely used and documented
-4. **Scalable**: Easy to extend and modify
-5. **Interview Friendly**: Each component has a clear purpose
+
+**Modern AI**: DSPy provides structured AI programming vs raw API calls
+**Industry Standard**: All libraries are widely used and documented
+**Scalable**: Easy to extend and modify
+**Interview Friendly**: Each component has a clear purpose
 
 ## 🚀 Quick Setup
 
@@ -179,33 +180,6 @@ vercel --prod
 - Add `OPENAI_API_KEY` in Vercel dashboard
 - Configure other environment variables as needed
 
-## 🎯 Interview Talking Points
-
-When explaining this project to interviewers:
-
-### Technical Decisions
-- **Why Flask over FastAPI/Django**: Simplicity, easier to explain, perfect for this use case
-- **Why OpenAI over custom ML**: Focus on integration and user experience
-- **Why vanilla JS over React**: Reduces complexity, demonstrates core web skills
-
-### Architecture Highlights
-- **Separation of Concerns**: Config, app logic, and frontend are clearly separated
-- **Error Handling**: Comprehensive error handling throughout the application
-- **Scalability**: Easy to add new question types or modify responses
-
-### Development Process
-- **Environment Management**: Proper use of virtual environments and .env files
-- **Code Quality**: Clean, commented, and documented code
-- **User Experience**: Intuitive interface with multiple interaction methods
-
-## 🛠️ Potential Extensions
-
-Ideas for further development:
-1. **Database Integration**: Store conversation history
-2. **Custom Training**: Fine-tune responses based on feedback
-3. **Multi-language Support**: Support for different languages
-4. **Analytics Dashboard**: Track common questions and response quality
-5. **Authentication**: User accounts and personalized experiences
 
 ## 📋 Requirements
 
